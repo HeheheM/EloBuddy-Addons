@@ -1,0 +1,9 @@
+C:\Users\Brend\OneDrive\Documents\Visual Studio 2015\Projects\MagicianRyze\MagicianRyze\bin\Debug\MagicianRyze.exe.config
+C:\Users\Brend\OneDrive\Documents\Visual Studio 2015\Projects\MagicianRyze\MagicianRyze\bin\Debug\MagicianRyze.exe
+C:\Users\Brend\OneDrive\Documents\Visual Studio 2015\Projects\MagicianRyze\MagicianRyze\bin\Debug\MagicianRyze.pdb
+C:\Users\Brend\OneDrive\Documents\Visual Studio 2015\Projects\MagicianRyze\MagicianRyze\bin\Debug\EloBuddy.dll
+C:\Users\Brend\OneDrive\Documents\Visual Studio 2015\Projects\MagicianRyze\MagicianRyze\bin\Debug\EloBuddy.SDK.dll
+C:\Users\Brend\OneDrive\Documents\Visual Studio 2015\Projects\MagicianRyze\MagicianRyze\bin\Debug\SharpDX.dll
+C:\Users\Brend\OneDrive\Documents\Visual Studio 2015\Projects\MagicianRyze\MagicianRyze\obj\Debug\MagicianRyze.csprojResolveAssemblyReference.cache
+C:\Users\Brend\OneDrive\Documents\Visual Studio 2015\Projects\MagicianRyze\MagicianRyze\obj\Debug\MagicianRyze.exe
+C:\Users\Brend\OneDrive\Documents\Visual Studio 2015\Projects\MagicianRyze\MagicianRyze\obj\Debug\MagicianRyze.pdb
