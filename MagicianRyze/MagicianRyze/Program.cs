@@ -16,9 +16,12 @@ namespace MagicianRyze
 
     /* To Do:
         
-        * Fix LastHit
-        * Ult need to work off snare
-        * 
+        * Ult need to work off root
+        * misc menus are acting up
+        * Leveler
+        * Fix Q if obj blocks last hit
+        * Ignite + Smite input
+        * don't Q Wind Wall
          
     */
     class Program
@@ -53,7 +56,6 @@ namespace MagicianRyze
 
             MagicianRyzeMenu = MainMenu.AddMenu("Magician Ryze", "MagicianRyze");
             MagicianRyzeMenu.AddGroupLabel("Magician Ryze");
-            MagicianRyzeMenu.AddSeparator();
 
             SettingMenu = MagicianRyzeMenu.AddSubMenu("Settings", "Settings");
             SettingMenu.AddGroupLabel("Settings");
@@ -62,8 +64,11 @@ namespace MagicianRyze
             SettingMenu.Add("KSmode", new CheckBox("KS Mode"));
             SettingMenu.Add("Stackmode", new CheckBox("Stack Tear Mode"));
             SettingMenu.AddSeparator();
-            SettingMenu.Add("Autopot_H", new Slider("Use Health Potion (%)",25,0,100));
-            SettingMenu.Add("Autopot_M", new Slider("Use Mana Potion (%)",25,0,100));
+            SettingMenu.AddLabel("Health Potion/Mana Potion/Crystalline Flask Activator - 0 is off");
+            SettingMenu.Add("Healthcall", new Slider("Use Health Potion if Health %",25,0,100));
+            SettingMenu.Add("Manacall", new Slider("Use Mana Potion if Mana %",25,0,100));
+            SettingMenu.Add("FlaskHcall", new Slider("Use Crystalline Flask if Health %", 25, 0, 100));
+            SettingMenu.Add("FlaskMcall", new Slider("Use Crystalline Flask if Mana %", 25, 0, 100));
 
             ComboMenu = MagicianRyzeMenu.AddSubMenu("Combo Features", "ComboFeatures");
             ComboMenu.AddGroupLabel("Combo Features");
@@ -72,6 +77,9 @@ namespace MagicianRyze
             ComboMenu.Add("Wcombo", new CheckBox("W"));
             ComboMenu.Add("Ecombo", new CheckBox("E"));
             ComboMenu.Add("Rcombo", new CheckBox("Use R with rooting"));
+            ComboMenu.AddSeparator();
+            ComboMenu.AddLabel("Seraph's Embrace Activation - 0 is Off");
+            ComboMenu.Add("Seraphscall", new Slider("Seraph's Embrace if Health %", 25, 0, 100));
 
             HarassMenu = MagicianRyzeMenu.AddSubMenu("Harass Features", "HarassFeatures");
             HarassMenu.AddGroupLabel("Harass Features");
@@ -100,6 +108,16 @@ namespace MagicianRyze
             LastHitMenu.Add("Wlasthit", new CheckBox("W"));
             
             Game.OnTick += Game_OnTick;
+            Drawing.OnDraw += Drawing_OnDraw;
+            MagicianHandler.LevelerMode();
+        }
+
+        static void Drawing_OnDraw(EventArgs args)
+        {
+            if (Program.SettingMenu["Drawmode"].Cast<CheckBox>().CurrentValue)
+            {
+                MagicianHandler.DrawMode();
+            }
         }
 
         static void Game_OnTick(EventArgs args)
@@ -108,33 +126,41 @@ namespace MagicianRyze
             {
                 MagicianHandler.ComboMode();
             }
-
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass))
             {
                 MagicianHandler.HarassMode();
             }
-
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.JungleClear))
             {
                 MagicianHandler.JungleMode();
             }
-
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear))
             {
                 MagicianHandler.LaneClearMode();
             }
-
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LastHit))
             {
                 MagicianHandler.LastHitMode();
             }
-            if (Program.SettingMenu["KSmode"].Cast<CheckBox>().CurrentValue)
+            if (Program.SettingMenu["KSmode"].Cast<CheckBox>().CurrentValue == true)
             {
                 MagicianHandler.KSMode();
             }
-            if (Program.SettingMenu["Stackmode"].Cast<CheckBox>().CurrentValue)
+            if (Program.SettingMenu["Stackmode"].Cast<CheckBox>().CurrentValue == true)
             {
                 MagicianHandler.StackMode();
+            }
+            if (Program.SettingMenu["Healthcall"].Cast<Slider>().CurrentValue > 0)
+            {
+                MagicianHandler.HealthPotionMode();
+            }
+            if (Program.SettingMenu["Manacall"].Cast<Slider>().CurrentValue > 0)
+            {
+                MagicianHandler.ManaPotionMode();
+            }
+            if (Program.SettingMenu["FlaskHcall"].Cast<Slider>().CurrentValue > 0 || Program.SettingMenu["FlaskMcall"].Cast<Slider>().CurrentValue > 0)
+            {
+                MagicianHandler.CrystallineFlaskMode();
             }
 
             /* Menu Information */

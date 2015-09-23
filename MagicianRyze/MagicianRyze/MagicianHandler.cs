@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,7 +32,7 @@ namespace MagicianRyze
         {
             return ObjectManager.Get<Obj_AI_Base>()
                     .Where(a => a.IsEnemy
-                    && a.Type == gametype
+                    && a.Type == gametype && !Ryze.IsRecalling
                     && !a.IsDead && a.IsValidTarget(range) && !a.IsInvulnerable
                     && a.Distance(Ryze) <= range).FirstOrDefault();
         }
@@ -74,6 +75,8 @@ namespace MagicianRyze
                 return null;
         }
 
+        /* Grab Items */
+        public static InventorySlot[] RyzeItems = Ryze.InventoryItems;
         /* Damage Calculator */
         static float QDamage(Obj_AI_Base target)
         {
@@ -153,6 +156,12 @@ namespace MagicianRyze
                     if (Program.R.IsReady())
                         Program.R.Cast(Rcombo);
                 }
+            }
+
+            /* Seraph's Embrace Shield */
+            if (Program.ComboMenu["Seraphscall"].Cast<Slider>().CurrentValue > 0)
+            {
+                SeraphShieldMode();
             }
         }
         public static void HarassMode()
@@ -261,21 +270,21 @@ namespace MagicianRyze
         {
             if (Program.SettingMenu["KSmode"].Cast<CheckBox>().CurrentValue)
             {
-                Obj_AI_Base Qks = GetEnemyKS(AttackSpell.Q, GameObjectType.obj_AI_Minion);
+                Obj_AI_Base Qks = GetEnemyKS(AttackSpell.Q, GameObjectType.AIHeroClient);
                 if (Qks != null)
                 {
                     if (Program.Q.IsReady())
                         Program.Q.Cast(Qks);
                 }
 
-                Obj_AI_Base Wks = GetEnemyKS(AttackSpell.W, GameObjectType.obj_AI_Minion);
+                Obj_AI_Base Wks = GetEnemyKS(AttackSpell.W, GameObjectType.AIHeroClient);
                 if (Wks != null)
                 {
                     if (Program.W.IsReady())
                         Program.W.Cast(Wks);
                 }
 
-                Obj_AI_Base Eks = GetEnemyKS(AttackSpell.E, GameObjectType.obj_AI_Minion);
+                Obj_AI_Base Eks = GetEnemyKS(AttackSpell.E, GameObjectType.AIHeroClient);
                 if (Eks != null)
                 {
                     if (Program.E.IsReady())
@@ -283,11 +292,16 @@ namespace MagicianRyze
                 }
             }
         }
+
+        /* Misc Modes */
+        public static void DrawMode()
+        {
+            Drawing.DrawCircle(Ryze.Position, Program.Q.Range, Color.DeepSkyBlue);
+            Drawing.DrawCircle(Ryze.Position, Program.W.Range, Color.SkyBlue);
+        }
         public static void StackMode()
         {
-            InventorySlot[] items = Ryze.InventoryItems;
-
-            foreach (InventorySlot item in items)
+            foreach (InventorySlot item in RyzeItems)
             {
                 if ((item.Id == ItemId.Tear_of_the_Goddess || item.Id == ItemId.Tear_of_the_Goddess_Crystal_Scar
                         || item.Id == ItemId.Archangels_Staff || item.Id == ItemId.Archangels_Staff_Crystal_Scar
@@ -298,6 +312,100 @@ namespace MagicianRyze
                 {
                     Program.Q.Cast(Ryze.Position);
                 }
+            }
+        }
+        public static void SeraphShieldMode()
+        {
+            foreach (InventorySlot item in RyzeItems)
+            {
+                if ((int)item.Id == 3040 || (int)item.Id == 3048
+                    && Ryze.Health <= (Ryze.MaxHealth * (Program.ComboMenu["Seraphscall"].Cast<Slider>().CurrentValue / 100))
+                    && item.CanUseItem())
+                {
+                    item.Cast();
+                }
+            }
+        }
+        public static void HealthPotionMode()
+        {
+            foreach(InventorySlot item in RyzeItems)
+            {
+                if (item.Id == ItemId.Health_Potion
+                    && Ryze.Health <= (Ryze.MaxHealth * (Program.SettingMenu["Healthcall"].Cast<Slider>().CurrentValue / 100))
+                    && !Ryze.IsRecalling()
+                    && !Ryze.IsInShopRange()
+                    && !Ryze.HasBuff("RegenerationPotion"))
+                {
+                    item.Cast();
+                    Chat.Say("HP time");
+                }
+            }
+        }
+        public static void ManaPotionMode()
+        {
+            foreach (InventorySlot item in RyzeItems)
+            {
+                if (item.Id == ItemId.Mana_Potion
+                    && Ryze.Mana <= (Ryze.MaxMana * (Program.SettingMenu["Manacall"].Cast<Slider>().CurrentValue / 100))
+                    && !Ryze.IsRecalling()
+                    && !Ryze.IsInShopRange()
+                    && !Ryze.HasBuff("FlaskOfCrystalWater"))
+                {
+                    item.Cast();
+                }
+            }
+        }
+        public static void CrystallineFlaskMode()
+        {
+            foreach (InventorySlot item in RyzeItems)
+            {
+                /* Flask Health Call */
+                if (item.Id == ItemId.Crystalline_Flask
+                    && Ryze.Health <= (Ryze.MaxHealth * (Program.SettingMenu["FlaskHcall"].Cast<Slider>().CurrentValue / 100))
+                    && !Ryze.IsRecalling()
+                    && !Ryze.IsInShopRange()
+                    && !Ryze.HasBuff("ItemCrystalFlask"))
+                {
+                    item.Cast();
+                }
+                /* Flask Mana Call */
+                if (item.Id == ItemId.Crystalline_Flask
+                    && Ryze.Mana <= (Ryze.MaxMana * (Program.SettingMenu["FlaskMcall"].Cast<Slider>().CurrentValue / 100))
+                    && !Ryze.IsRecalling()
+                    && !Ryze.IsInShopRange()
+                    && !Ryze.HasBuff("ItemCrystalFlask"))
+                {
+                    item.Cast();
+                }
+            }
+        }
+        public static void LevelerMode()
+        {
+            int[] order;
+            int qcall = 0, wcall = 0, ecall = 0, rcall = 0;
+            order = new int[] { 1, 2, 3, 1, 1, 4, 1, 3, 1, 2, 4, 2, 2, 2, 3, 4, 3, 3 };
+
+            int qcast = Ryze.Spellbook.GetSpell(SpellSlot.Q).Level + qcall;
+            int wcast = Ryze.Spellbook.GetSpell(SpellSlot.W).Level + wcall;
+            int ecast = Ryze.Spellbook.GetSpell(SpellSlot.E).Level + ecall;
+            int rcast = Ryze.Spellbook.GetSpell(SpellSlot.R).Level + rcall;
+
+            if (qcast + wcast + ecast + rcast > Ryze.Level)
+            {
+                int[] level = new int[] { 0, 0, 0, 0 };
+                for (int i = 0; i < Ryze.Level; i++)
+                {
+                    level[order[i] - 1] = level[order[i] - 1] + 1;
+                }
+
+                if (qcast < level[0])
+                    Ryze.Spellbook.LevelSpell(SpellSlot.Q);
+                if (wcast < level[1])
+                    Ryze.Spellbook.LevelSpell(SpellSlot.W);
+                if (ecast < level[2])
+                    Ryze.Spellbook.LevelSpell(SpellSlot.E);
+                if (rcast < level[3])
+                    Ryze.Spellbook.LevelSpell(SpellSlot.R);
             }
         }
     }
