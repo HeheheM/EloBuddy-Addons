@@ -22,6 +22,7 @@ namespace MagicianRyze
             Q,
             W,
             E,
+            I,
         }
         
         /* Grab Player */
@@ -70,7 +71,15 @@ namespace MagicianRyze
                     && a.Health <= EDamage(a)
                     && a.Distance(Ryze) <= Program.E.Range).FirstOrDefault();
             }
-
+            else if (spell == AttackSpell.I)
+            {
+                return ObjectManager.Get<Obj_AI_Base>()
+                    .Where(a => a.IsEnemy
+                    && a.Type == gametype
+                    && !a.IsDead && a.IsValidTarget(Program.Ignite.Range) && !a.IsInvulnerable
+                    && a.Health <= Ryze.GetSummonerSpellDamage(a, DamageLibrary.SummonerSpells.Ignite)
+                    && a.Distance(Ryze) <= Program.Ignite.Range).FirstOrDefault();
+            }
             else
                 return null;
         }
@@ -295,6 +304,15 @@ namespace MagicianRyze
                     if (Program.E.IsReady())
                         Program.E.Cast(Eks);
                 }
+            }
+        }
+        public static void IgniteMode()
+        {
+            Obj_AI_Base target = GetEnemyKS(AttackSpell.I, GameObjectType.AIHeroClient);
+            if (target != null)
+            {
+                if (Program.Ignite.IsReady())
+                    Program.Ignite.Cast(target);
             }
         }
 

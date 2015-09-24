@@ -17,7 +17,7 @@ namespace MagicianRyze
     /* To Do:
         
         * Ignite + Smite input
-        * don't Q Wind Wall/Unbreakable
+        * don't Q Wind Wall/Unbreakable/BlackShield
          
     */
     class Program
@@ -29,6 +29,7 @@ namespace MagicianRyze
         public static Spell.Targeted W;
         public static Spell.Targeted E;
         public static Spell.Active R;
+        public static Spell.Targeted Ignite;
 
         static void Main(string[] args)
         {
@@ -49,6 +50,14 @@ namespace MagicianRyze
             W = new Spell.Targeted(SpellSlot.W, 600);
             E = new Spell.Targeted(SpellSlot.E, 600);
             R = new Spell.Active(SpellSlot.R);
+            if (Player.GetSpell(SpellSlot.Summoner1).Name == "Summonerdot")
+            {
+                Ignite = new Spell.Targeted(SpellSlot.Summoner1, 600);
+            }
+            if (Player.GetSpell(SpellSlot.Summoner2).Name == "Summonerdot")
+            {
+                Ignite = new Spell.Targeted(SpellSlot.Summoner2, 600);
+            }
 
             MagicianRyzeMenu = MainMenu.AddMenu("Magician Ryze", "MagicianRyze");
             MagicianRyzeMenu.AddGroupLabel("Magician Ryze");
@@ -59,6 +68,7 @@ namespace MagicianRyze
             SettingMenu.Add("Drawmode", new CheckBox("Drawing Mode"));
             SettingMenu.Add("KSmode", new CheckBox("KS Mode"));
             SettingMenu.Add("Stackmode", new CheckBox("Stack Tear Mode"));
+            SettingMenu.Add("Ignitemode", new CheckBox("Auto Ignite"));
             SettingMenu.AddSeparator();
             SettingMenu.AddLabel("Health Potion/Mana Potion/Crystalline Flask Activator - 0 is off");
             SettingMenu.Add("Healthcall", new Slider("Use Health Potion if Health %",25,0,100));
@@ -160,6 +170,10 @@ namespace MagicianRyze
             if (Program.SettingMenu["FlaskHcall"].Cast<Slider>().CurrentValue > 0 || Program.SettingMenu["FlaskMcall"].Cast<Slider>().CurrentValue > 0)
             {
                 MagicianHandler.CrystallineFlaskMode();
+            }
+            if (Program.SettingMenu["Ignitemode"].Cast<CheckBox>().CurrentValue)
+            {
+                MagicianHandler.IgniteMode();
             }
 
             /* Menu Information */
