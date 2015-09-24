@@ -122,7 +122,9 @@ namespace MagicianRyze
                 if (Wcombo != null)
                 {
                     if (Program.W.IsReady())
+                    {
                         Program.W.Cast(Wcombo);
+                    }
                 }
             }
 
@@ -140,22 +142,24 @@ namespace MagicianRyze
             /* R in combo mode with root */
             if (Program.ComboMenu["Rcombo"].Cast<CheckBox>().CurrentValue == true)
             {
-                Obj_AI_Base Rcombo = GetEnemy(600, GameObjectType.AIHeroClient);
-                if (Rcombo != null && Rcombo.HasBuff("RyzeW"))
+                AIHeroClient Rcombo = ObjectManager.Get<AIHeroClient>().Where(a => a.IsEnemy
+                 && a.Distance(Ryze) <= Program.W.Range
+                && a.HasBuff("RyzeW")).FirstOrDefault();
+                if (Rcombo != null)
                 {
                     if (Program.R.IsReady())
-                        Program.R.Cast(Rcombo);
+                        Program.R.Cast();
                 }
             }
 
             /* R in combo mode without root */
             if (Program.ComboMenu["Rcombo"].Cast<CheckBox>().CurrentValue == false)
             {
-                Obj_AI_Base Rcombo = GetEnemy(600, GameObjectType.AIHeroClient);
+                AIHeroClient Rcombo = ObjectManager.Get<AIHeroClient>().Where(a => a.IsEnemy && a.Distance(Ryze) <= Program.Q.Range).FirstOrDefault();
                 if (Rcombo != null)
                 {
                     if (Program.R.IsReady())
-                        Program.R.Cast(Rcombo);
+                        Program.R.Cast();
                 }
             }
 
@@ -319,7 +323,7 @@ namespace MagicianRyze
         {
             foreach (InventorySlot item in RyzeItems)
             {
-                if ((int)item.Id == 3040 || (int)item.Id == 3048
+                if (((int)item.Id == 3040 || (int)item.Id == 3048)
                     && Ryze.Health <= (Ryze.MaxHealth * (0.01 * Program.ComboMenu["Seraphscall"].Cast<Slider>().CurrentValue))
                     && item.CanUseItem())
                 {

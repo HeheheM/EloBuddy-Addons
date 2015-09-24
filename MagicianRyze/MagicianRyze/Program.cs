@@ -16,10 +16,7 @@ namespace MagicianRyze
 
     /* To Do:
         
-        * Ult need to work off root
-        * misc menus are acting up
         * Leveler
-        * Fix Q if obj blocks last hit
         * Ignite + Smite input
         * don't Q Wind Wall
          
