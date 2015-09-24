@@ -383,34 +383,25 @@ namespace MagicianRyze
                 }
             }
         }
-        public static void LevelerMode()
+        public static void LevelerMode(Obj_AI_Base sender, Obj_AI_BaseLevelUpEventArgs args)
         {
-            int[] order;
-            int qcall = 0, wcall = 0, ecall = 0, rcall = 0;
-            order = new int[] { 1, 2, 3, 1, 1, 4, 1, 3, 1, 2, 4, 2, 2, 2, 3, 4, 3, 3 };
-
-            int qcast = Ryze.Spellbook.GetSpell(SpellSlot.Q).Level + qcall;
-            int wcast = Ryze.Spellbook.GetSpell(SpellSlot.W).Level + wcall;
-            int ecast = Ryze.Spellbook.GetSpell(SpellSlot.E).Level + ecall;
-            int rcast = Ryze.Spellbook.GetSpell(SpellSlot.R).Level + rcall;
-
-            if (qcast + wcast + ecast + rcast > Ryze.Level)
+            if (!sender.IsMe)
             {
-                int[] level = new int[] { 0, 0, 0, 0 };
-                for (int i = 0; i < Ryze.Level; i++)
-                {
-                    level[order[i] - 1] = level[order[i] - 1] + 1;
-                }
-
-                if (qcast < level[0])
-                    Ryze.Spellbook.LevelSpell(SpellSlot.Q);
-                if (wcast < level[1])
-                    Ryze.Spellbook.LevelSpell(SpellSlot.W);
-                if (ecast < level[2])
-                    Ryze.Spellbook.LevelSpell(SpellSlot.E);
-                if (rcast < level[3])
-                    Ryze.Spellbook.LevelSpell(SpellSlot.R);
+                return;
             }
+
+            int[] array = new int[] { 1, 2, 3, 1, 1, 4, 1, 3, 1, 2, 4, 2, 2, 2, 3, 4, 3, 3 };
+
+            int skill = array[args.Level - 1];
+
+            if (skill == 1)
+                Ryze.Spellbook.LevelSpell(SpellSlot.Q);
+            else if (skill == 2)
+                Ryze.Spellbook.LevelSpell(SpellSlot.W);
+            else if (skill == 3)
+                Ryze.Spellbook.LevelSpell(SpellSlot.E);
+            else if (skill == 4)
+                Ryze.Spellbook.LevelSpell(SpellSlot.R);
         }
     }
 }

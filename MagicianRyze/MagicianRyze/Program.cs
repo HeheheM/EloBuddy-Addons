@@ -16,9 +16,8 @@ namespace MagicianRyze
 
     /* To Do:
         
-        * Leveler
         * Ignite + Smite input
-        * don't Q Wind Wall
+        * don't Q Wind Wall/Unbreakable
          
     */
     class Program
@@ -106,7 +105,7 @@ namespace MagicianRyze
             
             Game.OnTick += Game_OnTick;
             Drawing.OnDraw += Drawing_OnDraw;
-            MagicianHandler.LevelerMode();
+            Player.OnLevelUp += MagicianHandler.LevelerMode;
         }
 
         static void Drawing_OnDraw(EventArgs args)
