@@ -116,8 +116,8 @@ namespace MagicianRyze
             Game.OnTick += Game_OnTick;
             Drawing.OnDraw += Drawing_OnDraw;
             Player.OnLevelUp += MagicianHandler.LevelerMode;
-            Gapcloser.OnGapCloser += Gapcloser_OnGapcloser;
-            /*Interrupter.OnInterruptableSpell += Interrupter_OnInterruptableSpell;*/
+            /*Gapcloser.OnGapCloser += Gapcloser_OnGapcloser;
+            Interrupter.OnInterruptableSpell += Interrupter_OnInterruptableSpell;*/
 
         }
 
@@ -187,12 +187,12 @@ namespace MagicianRyze
             }
         }
 
-        static void Gapcloser_OnGapcloser(AIHeroClient target, GapCloserEventArgs args)
+        /*static void Gapcloser_OnGapcloser(AIHeroClient target, GapCloserEventArgs args)
         {
             if (Program.W.IsReady())
                 Program.W.Cast(target);
         }
-        /*static void Interrupter_OnInterruptableSpell(AIHeroClient target, Interrupter.OnInterruptableSpellDelegate args)
+        static void Interrupter_OnInterruptableSpell(AIHeroClient target, Interrupter.OnInterruptableSpellDelegate args)
         {
             if (Program.W.IsReady())
                 Program.W.Cast(target);
