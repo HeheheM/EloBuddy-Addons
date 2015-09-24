@@ -142,11 +142,11 @@ namespace MagicianRyze
             {
                 MagicianHandler.LastHitMode();
             }
-            if (Program.SettingMenu["KSmode"].Cast<CheckBox>().CurrentValue == true)
+            if (Program.SettingMenu["KSmode"].Cast<CheckBox>().CurrentValue)
             {
                 MagicianHandler.KSMode();
             }
-            if (Program.SettingMenu["Stackmode"].Cast<CheckBox>().CurrentValue == true)
+            if (Program.SettingMenu["Stackmode"].Cast<CheckBox>().CurrentValue)
             {
                 MagicianHandler.StackMode();
             }

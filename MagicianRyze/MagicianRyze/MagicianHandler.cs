@@ -45,7 +45,7 @@ namespace MagicianRyze
                     .Where(a => a.IsEnemy
                     && a.Type == gametype
                     && !a.IsDead && a.IsValidTarget(Program.Q.Range) && !a.IsInvulnerable
-                    && a.Health <= (QDamage(a) - 25)
+                    && a.Health <= QDamage(a)
                     && a.Distance(Ryze) <= Program.Q.Range).FirstOrDefault();
             }
 
@@ -76,26 +76,27 @@ namespace MagicianRyze
         }
 
         /* Grab Items */
-        public static InventorySlot[] RyzeItems = Ryze.InventoryItems;
+        public static InventorySlot[] RyzeItems { get { return Ryze.InventoryItems; } }
+
         /* Damage Calculator */
         static float QDamage(Obj_AI_Base target)
         {
             return Ryze.CalculateDamageOnUnit(target, DamageType.Magical,
-                new float[] { 60, 85, 110, 135, 160 }[Program.Q.Level] 
+                new float[] { 0, 60, 85, 110, 135, 160 }[Program.Q.Level] 
                 + (0.55f * Ryze.FlatMagicDamageMod)
-                + (new float[] { 0.02f, 0.025f, 0.03f, 0.035f, 0.04f }[Program.Q.Level] * Ryze.MaxMana));
+                + (new float[] { 0f, 0.02f, 0.025f, 0.03f, 0.035f, 0.04f }[Program.Q.Level] * Ryze.MaxMana));
         }
         static float WDamage(Obj_AI_Base target)
         {
             return Ryze.CalculateDamageOnUnit(target, DamageType.Magical,
-                new float[] { 80, 100, 120, 140, 160 }[Program.W.Level]
+                new float[] { 0, 80, 100, 120, 140, 160 }[Program.W.Level]
                 + (0.4f * Ryze.FlatMagicDamageMod)
                 + (0.025f * Ryze.MaxMana));
         }
         static float EDamage(Obj_AI_Base target)
         {
             return Ryze.CalculateDamageOnUnit(target, DamageType.Magical,
-                new float[] { 36, 52, 68, 84, 100}[Program.E.Level]
+                new float[] { 0, 36, 52, 68, 84, 100}[Program.E.Level]
                 + (0.2f * Ryze.FlatMagicDamageMod)
                 + (0.02f * Ryze.MaxMana));
         }
@@ -331,13 +332,12 @@ namespace MagicianRyze
             foreach(InventorySlot item in RyzeItems)
             {
                 if (item.Id == ItemId.Health_Potion
-                    && Ryze.Health <= (Ryze.MaxHealth * (Program.SettingMenu["Healthcall"].Cast<Slider>().CurrentValue / 100))
+                    && Ryze.Health <= (Ryze.MaxHealth * (0.01 * Program.SettingMenu["Healthcall"].Cast<Slider>().CurrentValue))
                     && !Ryze.IsRecalling()
                     && !Ryze.IsInShopRange()
                     && !Ryze.HasBuff("RegenerationPotion"))
                 {
                     item.Cast();
-                    Chat.Say("HP time");
                 }
             }
         }
@@ -346,7 +346,7 @@ namespace MagicianRyze
             foreach (InventorySlot item in RyzeItems)
             {
                 if (item.Id == ItemId.Mana_Potion
-                    && Ryze.Mana <= (Ryze.MaxMana * (Program.SettingMenu["Manacall"].Cast<Slider>().CurrentValue / 100))
+                    && Ryze.Mana <= (Ryze.MaxMana * (0.01 * Program.SettingMenu["FlaskHcall"].Cast<Slider>().CurrentValue))
                     && !Ryze.IsRecalling()
                     && !Ryze.IsInShopRange()
                     && !Ryze.HasBuff("FlaskOfCrystalWater"))
@@ -361,7 +361,7 @@ namespace MagicianRyze
             {
                 /* Flask Health Call */
                 if (item.Id == ItemId.Crystalline_Flask
-                    && Ryze.Health <= (Ryze.MaxHealth * (Program.SettingMenu["FlaskHcall"].Cast<Slider>().CurrentValue / 100))
+                    && Ryze.Health <= (Ryze.MaxHealth * (0.01 * Program.SettingMenu["FlaskHcall"].Cast<Slider>().CurrentValue))
                     && !Ryze.IsRecalling()
                     && !Ryze.IsInShopRange()
                     && !Ryze.HasBuff("ItemCrystalFlask"))
@@ -370,7 +370,7 @@ namespace MagicianRyze
                 }
                 /* Flask Mana Call */
                 if (item.Id == ItemId.Crystalline_Flask
-                    && Ryze.Mana <= (Ryze.MaxMana * (Program.SettingMenu["FlaskMcall"].Cast<Slider>().CurrentValue / 100))
+                    && Ryze.Mana <= (Ryze.MaxMana * (0.01 * Program.SettingMenu["FlaskMcall"].Cast<Slider>().CurrentValue))
                     && !Ryze.IsRecalling()
                     && !Ryze.IsInShopRange()
                     && !Ryze.HasBuff("ItemCrystalFlask"))
