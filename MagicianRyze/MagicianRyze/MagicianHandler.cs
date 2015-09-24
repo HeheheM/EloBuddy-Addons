@@ -30,7 +30,7 @@ namespace MagicianRyze
         /* Grab Enemies */
         public static Obj_AI_Base GetEnemy(float range, GameObjectType gametype)
         {
-            return ObjectManager.Get<Obj_AI_Base>()
+            return ObjectManager.Get<Obj_AI_Base>().OrderBy(a => a.Health)
                     .Where(a => a.IsEnemy
                     && a.Type == gametype && !Ryze.IsRecalling
                     && !a.IsDead && a.IsValidTarget(range) && !a.IsInvulnerable
@@ -41,7 +41,7 @@ namespace MagicianRyze
             /* Last hit with Q */
             if (spell == AttackSpell.Q)
             {
-                return ObjectManager.Get<Obj_AI_Base>()
+                return ObjectManager.Get<Obj_AI_Base>().OrderBy(a => a.Health)
                     .Where(a => a.IsEnemy
                     && a.Type == gametype
                     && !a.IsDead && a.IsValidTarget(Program.Q.Range) && !a.IsInvulnerable
@@ -183,7 +183,7 @@ namespace MagicianRyze
             /* Q in jungle mode */
             if (Program.JungleMenu["Qjungle"].Cast<CheckBox>().CurrentValue)
             {
-                Obj_AI_Base Qcamp = GetEnemy(Program.Q.Range, GameObjectType.obj_AI_Base);
+                Obj_AI_Base Qcamp = GetEnemy(Program.Q.Range, GameObjectType.obj_AI_Minion);
                 if (Qcamp != null)
                 {
                     if (Program.Q.IsReady())
@@ -194,7 +194,7 @@ namespace MagicianRyze
             /* W in jungle mode */
             if (Program.JungleMenu["Wjungle"].Cast<CheckBox>().CurrentValue)
             {
-                Obj_AI_Base Wcamp = GetEnemy(Program.W.Range, GameObjectType.obj_AI_Base);
+                Obj_AI_Base Wcamp = GetEnemy(Program.W.Range, GameObjectType.obj_AI_Minion);
                 if (Wcamp != null)
                 {
                     if (Program.W.IsReady())
@@ -205,7 +205,7 @@ namespace MagicianRyze
             /* E in jungle mode */
             if (Program.JungleMenu["Ejungle"].Cast<CheckBox>().CurrentValue)
             {
-                Obj_AI_Base Ecamp = GetEnemy(Program.E.Range, GameObjectType.obj_AI_Base);
+                Obj_AI_Base Ecamp = GetEnemy(Program.E.Range, GameObjectType.obj_AI_Minion);
                 if (Ecamp != null)
                 {
                     if (Program.E.IsReady())
@@ -320,7 +320,7 @@ namespace MagicianRyze
             foreach (InventorySlot item in RyzeItems)
             {
                 if ((int)item.Id == 3040 || (int)item.Id == 3048
-                    && Ryze.Health <= (Ryze.MaxHealth * (Program.ComboMenu["Seraphscall"].Cast<Slider>().CurrentValue / 100))
+                    && Ryze.Health <= (Ryze.MaxHealth * (0.01 * Program.ComboMenu["Seraphscall"].Cast<Slider>().CurrentValue))
                     && item.CanUseItem())
                 {
                     item.Cast();
