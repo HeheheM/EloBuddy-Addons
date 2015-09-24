@@ -106,6 +106,9 @@ namespace MagicianRyze
             Game.OnTick += Game_OnTick;
             Drawing.OnDraw += Drawing_OnDraw;
             Player.OnLevelUp += MagicianHandler.LevelerMode;
+            Gapcloser.OnGapCloser += Gapcloser_OnGapcloser;
+            /*Interrupter.OnInterruptableSpell += Interrupter_OnInterruptableSpell;*/
+
         }
 
         static void Drawing_OnDraw(EventArgs args)
@@ -169,5 +172,16 @@ namespace MagicianRyze
                 ComboMenu["Rcombo"].Cast<CheckBox>().DisplayName = "Use R with rooting";
             }
         }
+
+        static void Gapcloser_OnGapcloser(AIHeroClient target, GapCloserEventArgs args)
+        {
+            if (Program.W.IsReady())
+                Program.W.Cast(target);
+        }
+        /*static void Interrupter_OnInterruptableSpell(AIHeroClient target, Interrupter.OnInterruptableSpellDelegate args)
+        {
+            if (Program.W.IsReady())
+                Program.W.Cast(target);
+        }*/
     }
 }
