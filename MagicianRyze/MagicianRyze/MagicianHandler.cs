@@ -407,9 +407,9 @@ namespace MagicianRyze
             {
                 return;
             }
-
+            
             int[] array = new int[] { 1, 2, 1, 3, 1, 4, 1, 2, 1, 2, 4, 2, 2, 3, 3, 4, 3, 3 };
-            int skill = array[args.Level - 1];
+            int skill = array[args.Level];
 
             if (skill == 1)
                 Ryze.Spellbook.LevelSpell(SpellSlot.Q);
@@ -419,6 +419,8 @@ namespace MagicianRyze
                 Ryze.Spellbook.LevelSpell(SpellSlot.E);
             else if (skill == 4)
                 Ryze.Spellbook.LevelSpell(SpellSlot.R);
+            else
+                return;
         }
     }
 }
