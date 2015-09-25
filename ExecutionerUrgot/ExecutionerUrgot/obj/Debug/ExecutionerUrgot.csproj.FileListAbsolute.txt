@@ -1,1 +1,9 @@
 c:\users\brend\onedrive\documents\visual studio 2015\Projects\ExecutionerUrgot\ExecutionerUrgot\bin\Debug\ExecutionerUrgot.exe.config
+C:\Users\Brend\OneDrive\Documents\Visual Studio 2015\Projects\ExecutionerUrgot\ExecutionerUrgot\bin\Debug\ExecutionerUrgot.exe
+C:\Users\Brend\OneDrive\Documents\Visual Studio 2015\Projects\ExecutionerUrgot\ExecutionerUrgot\bin\Debug\ExecutionerUrgot.pdb
+C:\Users\Brend\OneDrive\Documents\Visual Studio 2015\Projects\ExecutionerUrgot\ExecutionerUrgot\bin\Debug\EloBuddy.dll
+C:\Users\Brend\OneDrive\Documents\Visual Studio 2015\Projects\ExecutionerUrgot\ExecutionerUrgot\bin\Debug\EloBuddy.SDK.dll
+C:\Users\Brend\OneDrive\Documents\Visual Studio 2015\Projects\ExecutionerUrgot\ExecutionerUrgot\bin\Debug\SharpDX.dll
+C:\Users\Brend\OneDrive\Documents\Visual Studio 2015\Projects\ExecutionerUrgot\ExecutionerUrgot\obj\Debug\ExecutionerUrgot.csprojResolveAssemblyReference.cache
+C:\Users\Brend\OneDrive\Documents\Visual Studio 2015\Projects\ExecutionerUrgot\ExecutionerUrgot\obj\Debug\ExecutionerUrgot.exe
+C:\Users\Brend\OneDrive\Documents\Visual Studio 2015\Projects\ExecutionerUrgot\ExecutionerUrgot\obj\Debug\ExecutionerUrgot.pdb
