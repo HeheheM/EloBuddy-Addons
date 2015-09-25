@@ -23,7 +23,7 @@ namespace MagicianRyze
     class Program
     {
         /* Menus */
-        public static Menu MagicianRyzeMenu, SettingMenu, ComboMenu, HarassMenu, JungleMenu, LaneClearMenu, LastHitMenu;
+        public static Menu MagicianRyzeMenu, SettingMenu, DrawingMenu, ComboMenu, HarassMenu, JungleMenu, LaneClearMenu, LastHitMenu;
         // Skills
         public static Spell.Skillshot Q;
         public static Spell.Targeted W;
@@ -65,7 +65,6 @@ namespace MagicianRyze
             SettingMenu = MagicianRyzeMenu.AddSubMenu("Settings", "Settings");
             SettingMenu.AddGroupLabel("Settings");
             SettingMenu.AddSeparator();
-            SettingMenu.Add("Drawmode", new CheckBox("Drawing Mode"));
             SettingMenu.Add("KSmode", new CheckBox("KS Mode"));
             SettingMenu.Add("Stackmode", new CheckBox("Stack Tear Mode"));
             SettingMenu.Add("Ignitemode", new CheckBox("Auto Ignite"));
@@ -75,6 +74,12 @@ namespace MagicianRyze
             SettingMenu.Add("Manacall", new Slider("Use Mana Potion if Mana %",25,0,100));
             SettingMenu.Add("FlaskHcall", new Slider("Use Crystalline Flask if Health %", 25, 0, 100));
             SettingMenu.Add("FlaskMcall", new Slider("Use Crystalline Flask if Mana %", 25, 0, 100));
+
+            DrawingMenu = MagicianRyzeMenu.AddSubMenu("Drawing Features", "DrawingFeatures");
+            DrawingMenu.AddGroupLabel("Drawing Features");
+            DrawingMenu.AddSeparator();
+            DrawingMenu.Add("Qdraw", new CheckBox("Q"));
+            DrawingMenu.Add("WEdraw", new CheckBox("W/E"));
 
             ComboMenu = MagicianRyzeMenu.AddSubMenu("Combo Features", "ComboFeatures");
             ComboMenu.AddGroupLabel("Combo Features");
@@ -123,10 +128,7 @@ namespace MagicianRyze
 
         static void Drawing_OnDraw(EventArgs args)
         {
-            if (Program.SettingMenu["Drawmode"].Cast<CheckBox>().CurrentValue)
-            {
-                MagicianHandler.DrawMode();
-            }
+            MagicianHandler.DrawMode();
         }
 
         static void Game_OnTick(EventArgs args)

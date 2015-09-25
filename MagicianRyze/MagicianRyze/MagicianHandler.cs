@@ -319,8 +319,14 @@ namespace MagicianRyze
         /* Misc Modes */
         public static void DrawMode()
         {
-            Drawing.DrawCircle(Ryze.Position, Program.Q.Range, Color.DeepSkyBlue);
-            Drawing.DrawCircle(Ryze.Position, Program.W.Range, Color.SkyBlue);
+            if (Program.DrawingMenu["Qdraw"].Cast<CheckBox>().CurrentValue)
+            {
+                Drawing.DrawCircle(Ryze.Position, Program.Q.Range, Color.SlateBlue);
+            }
+            if (Program.DrawingMenu["WEdraw"].Cast<CheckBox>().CurrentValue)
+            {
+                Drawing.DrawCircle(Ryze.Position, Program.W.Range, Color.DarkSlateBlue);
+            }
         }
         public static void StackMode()
         {
