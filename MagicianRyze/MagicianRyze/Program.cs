@@ -30,6 +30,8 @@ namespace MagicianRyze
         public static Spell.Targeted E;
         public static Spell.Active R;
         public static Spell.Targeted Ignite;
+        public static Spell.Targeted Smite;
+        private static string[] Smites = new[] { "summonersmite", "itemsmiteaoe", "s5_summonersmiteplayerganker", "s5_summonersmitequick", "s5_summonersmiteduel" };
 
         static void Main(string[] args)
         {
@@ -50,13 +52,21 @@ namespace MagicianRyze
             W = new Spell.Targeted(SpellSlot.W, 600);
             E = new Spell.Targeted(SpellSlot.E, 600);
             R = new Spell.Active(SpellSlot.R);
-            if (Player.GetSpell(SpellSlot.Summoner1).Name == "Summonerdot")
+            if (Player.GetSpell(SpellSlot.Summoner1).Name == "summonerdot")
             {
                 Ignite = new Spell.Targeted(SpellSlot.Summoner1, 600);
             }
-            if (Player.GetSpell(SpellSlot.Summoner2).Name == "Summonerdot")
+            if (Player.GetSpell(SpellSlot.Summoner2).Name == "summonerdot")
             {
                 Ignite = new Spell.Targeted(SpellSlot.Summoner2, 600);
+            }
+            if (Smites.Contains(ObjectManager.Player.Spellbook.GetSpell(SpellSlot.Summoner1).Name))
+            {
+                Smite = new Spell.Targeted(SpellSlot.Summoner1, 500);
+            }
+            if (Smites.Contains(ObjectManager.Player.Spellbook.GetSpell(SpellSlot.Summoner2).Name))
+            {
+                Smite = new Spell.Targeted(SpellSlot.Summoner2, 500);
             }
 
             MagicianRyzeMenu = MainMenu.AddMenu("Magician Ryze", "MagicianRyze");
@@ -67,7 +77,14 @@ namespace MagicianRyze
             SettingMenu.AddSeparator();
             SettingMenu.Add("KSmode", new CheckBox("KS Mode"));
             SettingMenu.Add("Stackmode", new CheckBox("Stack Tear Mode"));
-            SettingMenu.Add("Ignitemode", new CheckBox("Auto Ignite"));
+            if (Ignite != null)
+            {
+                SettingMenu.Add("Ignitemode", new CheckBox("Auto Ignite"));
+            }
+            if (Smite != null)
+            {
+                SettingMenu.Add("Smitemode", new CheckBox("Auto Smite"));
+            }
             SettingMenu.AddSeparator();
             SettingMenu.AddLabel("Health Potion/Mana Potion/Crystalline Flask Activator - 0 is off");
             SettingMenu.Add("Healthcall", new Slider("Use Health Potion if Health %",25,0,100));
@@ -173,9 +190,19 @@ namespace MagicianRyze
             {
                 MagicianHandler.CrystallineFlaskMode();
             }
-            if (Program.SettingMenu["Ignitemode"].Cast<CheckBox>().CurrentValue)
+            if (Ignite != null)
             {
-                MagicianHandler.IgniteMode();
+                if (Program.SettingMenu["Ignitemode"].Cast<CheckBox>().CurrentValue)
+                {
+                    MagicianHandler.IgniteMode();
+                }
+            }
+            if (Smite != null)
+            {
+                if (Program.SettingMenu["Smitemode"].Cast<CheckBox>().CurrentValue)
+                {
+                    MagicianHandler.SmiteMode();
+                }
             }
 
             /* Menu Information */
