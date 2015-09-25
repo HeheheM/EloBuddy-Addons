@@ -78,7 +78,7 @@ namespace MagicianRyze
                     .Where(a => a.IsEnemy
                     && a.Type == gametype
                     && !a.IsDead && a.IsValidTarget(Program.Ignite.Range) && !a.IsInvulnerable
-                    && a.Health <= Ryze.GetSummonerSpellDamage(a, DamageLibrary.SummonerSpells.Ignite)
+                    && a.Health <= (Ryze.GetSummonerSpellDamage(a, DamageLibrary.SummonerSpells.Ignite) - (a.HPRegenRate / 10))
                     && a.Distance(Ryze) <= Program.Ignite.Range).FirstOrDefault();
             }
             else if (spell == AttackSpell.S)
@@ -87,12 +87,20 @@ namespace MagicianRyze
                     .Where(a => a.IsEnemy
                     && a.Type == gametype
                     && !a.IsDead && a.IsValidTarget(Program.Smite.Range) && !a.IsInvulnerable
+                    && Monsters.Any(name => a.Name.StartsWith(name))
                     && a.Health <= Ryze.GetSummonerSpellDamage(a, DamageLibrary.SummonerSpells.Smite)
                     && a.Distance(Ryze) <= Program.Smite.Range).FirstOrDefault();
             }
             else
                 return null;
         }
+        /* Grab Monsters */
+        public static string[] Monsters =
+        {
+            "SRU_Blue", "SRU_Red", "SRU_Krug", "SRU_Gromp", "SRU_Murkwolf", "SRU_Razorbeak",
+            "SRU_Crab", "SRU_Dragon", "SRU_Baron",
+            "TTNGolem", "TTNWolf", "TTNWraith", "TT_Spiderboss"
+        };
 
         /* Grab Items */
         public static InventorySlot[] RyzeItems { get { return Ryze.InventoryItems; } }
@@ -346,7 +354,15 @@ namespace MagicianRyze
             }
             if (Program.DrawingMenu["WEdraw"].Cast<CheckBox>().CurrentValue)
             {
-                Drawing.DrawCircle(Ryze.Position, Program.W.Range, Color.DarkSlateBlue);
+                Drawing.DrawCircle(Ryze.Position, Program.W.Range, Color.SlateBlue);
+            }
+            if (Program.Ignite != null && Program.DrawingMenu["Idraw"].Cast<CheckBox>().CurrentValue)
+            {
+                Drawing.DrawCircle(Ryze.Position, Program.Ignite.Range, Color.MediumVioletRed);
+            }
+            if (Program.Smite != null && Program.DrawingMenu["Sdraw"].Cast<CheckBox>().CurrentValue)
+            {
+                Drawing.DrawCircle(Ryze.Position, Program.Smite.Range, Color.LightGoldenrodYellow);
             }
         }
         public static void StackMode()
@@ -435,8 +451,8 @@ namespace MagicianRyze
                 return;
             }
             
-            int[] array = new int[] { 0, 1, 2, 1, 3, 1, 4, 1, 2, 1, 2, 4, 2, 2, 3, 3, 4, 3, 3 };
-            int skill = array[args.Level];
+            int[] leveler = new int[] { 1, 2, 1, 3, 1, 4, 1, 2, 1, 2, 4, 2, 2, 3, 3, 4, 3, 3 };
+            int skill = leveler[Ryze.Level];
 
             if (skill == 1)
                 Ryze.Spellbook.LevelSpell(SpellSlot.Q);

@@ -84,6 +84,7 @@ namespace MagicianRyze
             if (Smite != null)
             {
                 SettingMenu.Add("Smitemode", new CheckBox("Auto Smite"));
+                SettingMenu.Add("KSsmite", new CheckBox("Smite KS"));
             }
             SettingMenu.AddSeparator();
             SettingMenu.AddLabel("Health Potion/Mana Potion/Crystalline Flask Activator - 0 is off");
@@ -97,6 +98,14 @@ namespace MagicianRyze
             DrawingMenu.AddSeparator();
             DrawingMenu.Add("Qdraw", new CheckBox("Q"));
             DrawingMenu.Add("WEdraw", new CheckBox("W/E"));
+            if (Ignite != null)
+            {
+                DrawingMenu.Add("Idraw", new CheckBox("Ignite"));
+            }
+            if (Smite != null)
+            {
+                DrawingMenu.Add("Sdraw", new CheckBox("Smite"));
+            }
 
             ComboMenu = MagicianRyzeMenu.AddSubMenu("Combo Features", "ComboFeatures");
             ComboMenu.AddGroupLabel("Combo Features");
@@ -120,6 +129,25 @@ namespace MagicianRyze
             JungleMenu.Add("Qjungle", new CheckBox("Q"));
             JungleMenu.Add("Wjungle", new CheckBox("W"));
             JungleMenu.Add("Ejungle", new CheckBox("E"));
+            if (Smite != null)
+            {
+                JungleMenu.AddGroupLabel("Smite Features");
+                JungleMenu.AddLabel("Summoner's Rift Camps");
+                JungleMenu.Add("Bluesmite", new CheckBox("Blue Sentinel"));
+                JungleMenu.Add("Redsmite", new CheckBox("Red Brambleback"));
+                JungleMenu.Add("Krugsmite", new CheckBox("Ancient Krug"));
+                JungleMenu.Add("Grompsmite", new CheckBox("Gromp"));
+                JungleMenu.Add("Murksmite", new CheckBox("Greater Murk Wolf"));
+                JungleMenu.Add("Birdsmite", new CheckBox("Crimson Raptor"));
+                JungleMenu.Add("Crabsmite", new CheckBox("Rift Scuttler"));
+                JungleMenu.Add("Dragonsmite", new CheckBox("Dragon"));
+                JungleMenu.Add("Baronsmite", new CheckBox("Baron Nashor"));
+                JungleMenu.AddLabel("Twisted Treeline Camps");
+                JungleMenu.Add("Golemsmite", new CheckBox("Big Golem"));
+                JungleMenu.Add("Wolfsmite", new CheckBox("Giant Wolf"));
+                JungleMenu.Add("Wraithsmite", new CheckBox("Wraith"));
+                JungleMenu.Add("Spidersmite", new CheckBox("Vilemaw"));
+            }
 
             LaneClearMenu = MagicianRyzeMenu.AddSubMenu("Lane Clear Features", "LaneClearFeatures");
             LaneClearMenu.AddGroupLabel("Lane Clear Features");
@@ -137,6 +165,10 @@ namespace MagicianRyze
             
             Game.OnTick += Game_OnTick;
             Drawing.OnDraw += Drawing_OnDraw;
+            if (MagicianHandler.Ryze.Level == 1)
+            {
+                MagicianHandler.Ryze.Spellbook.LevelSpell(SpellSlot.Q);
+            }
             Player.OnLevelUp += MagicianHandler.LevelerMode;
             /*Gapcloser.OnGapCloser += Gapcloser_OnGapcloser;
             Interrupter.OnInterruptableSpell += Interrupter_OnInterruptableSpell;*/
