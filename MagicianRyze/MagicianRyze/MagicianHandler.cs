@@ -94,6 +94,7 @@ namespace MagicianRyze
             else
                 return null;
         }
+        
         /* Grab Monsters */
         public static string[] Monsters =
         {
