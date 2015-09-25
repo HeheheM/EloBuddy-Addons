@@ -49,28 +49,6 @@ namespace ExecutionerUrgot
                     && a.Health <= QDamage(a)
                     && a.Distance(Urgot) <= Program.Q.Range).FirstOrDefault();
             }
-
-            /* Last hit with W */
-            else if (spell == AttackSpell.W)
-            {
-                return ObjectManager.Get<Obj_AI_Base>()
-                    .Where(a => a.IsEnemy
-                    && a.Type == gametype
-                    && !a.IsDead && a.IsValidTarget(Program.W.Range) && !a.IsInvulnerable
-                    && a.Health <= WDamage(a)
-                    && a.Distance(Urgot) <= Program.W.Range).FirstOrDefault();
-            }
-
-            /* Last hit with E */
-            else if (spell == AttackSpell.E)
-            {
-                return ObjectManager.Get<Obj_AI_Base>()
-                    .Where(a => a.IsEnemy
-                    && a.Type == gametype
-                    && !a.IsDead && a.IsValidTarget(Program.E.Range) && !a.IsInvulnerable
-                    && a.Health <= EDamage(a)
-                    && a.Distance(Urgot) <= Program.E.Range).FirstOrDefault();
-            }
             else if (spell == AttackSpell.I)
             {
                 return ObjectManager.Get<Obj_AI_Base>()
@@ -108,24 +86,15 @@ namespace ExecutionerUrgot
         /* Damage Calculator */
         static float QDamage(Obj_AI_Base target)
         {
-            return Urgot.CalculateDamageOnUnit(target, DamageType.Magical,
-                new float[] { 0, 60, 85, 110, 135, 160 }[Program.Q.Level]
-                + (0.55f * Urgot.FlatMagicDamageMod)
-                + (new float[] { 0f, 0.02f, 0.025f, 0.03f, 0.035f, 0.04f }[Program.Q.Level] * Urgot.MaxMana));
-        }
-        static float WDamage(Obj_AI_Base target)
-        {
-            return Urgot.CalculateDamageOnUnit(target, DamageType.Magical,
-                new float[] { 0, 80, 100, 120, 140, 160 }[Program.W.Level]
-                + (0.4f * Urgot.FlatMagicDamageMod)
-                + (0.025f * Urgot.MaxMana));
+            return Urgot.CalculateDamageOnUnit(target, DamageType.Physical,
+                new float[] { 0, 10, 40, 70, 100, 130 }[Program.Q.Level]
+                + (0.85f * Urgot.FlatPhysicalDamageMod));
         }
         static float EDamage(Obj_AI_Base target)
         {
-            return Urgot.CalculateDamageOnUnit(target, DamageType.Magical,
-                new float[] { 0, 36, 52, 68, 84, 100 }[Program.E.Level]
-                + (0.2f * Urgot.FlatMagicDamageMod)
-                + (0.02f * Urgot.MaxMana));
+            return Urgot.CalculateDamageOnUnit(target, DamageType.Physical,
+                new float[] { 0, 75, 130, 185, 240, 295 }[Program.E.Level]
+                + (0.6f * Urgot.FlatPhysicalDamageMod));
         }
 
         /* Features Handler */
@@ -142,19 +111,6 @@ namespace ExecutionerUrgot
                 }
             }
 
-            /* W in combo mode */
-            if (Program.ComboMenu["Wcombo"].Cast<CheckBox>().CurrentValue)
-            {
-                Obj_AI_Base Wcombo = GetEnemy(Program.W.Range, GameObjectType.AIHeroClient);
-                if (Wcombo != null)
-                {
-                    if (Program.W.IsReady())
-                    {
-                        Program.W.Cast(Wcombo);
-                    }
-                }
-            }
-
             /* E in combo mode */
             if (Program.ComboMenu["Ecombo"].Cast<CheckBox>().CurrentValue)
             {
@@ -166,10 +122,10 @@ namespace ExecutionerUrgot
                 }
             }
 
+            /* R in combo mode */
             if (Program.ComboMenu["Rcombo"].Cast<CheckBox>().CurrentValue == true)
             {
-                AIHeroClient Rcombo = ObjectManager.Get<AIHeroClient>().Where(a => a.IsEnemy
-                 && a.Distance(Urgot) <= Program.W.Range).FirstOrDefault();
+                Obj_AI_Base Rcombo = GetEnemy(Program.R.Range, GameObjectType.AIHeroClient);
                 if (Rcombo != null)
                 {
                     if (Program.R.IsReady())
@@ -189,6 +145,17 @@ namespace ExecutionerUrgot
                         Program.Q.Cast(Qharass);
                 }
             }
+
+            /* E in harras mode */
+            if (Program.HarassMenu["Eharras"].Cast<CheckBox>().CurrentValue)
+            {
+                Obj_AI_Base Eharass = GetEnemy(Program.E.Range, GameObjectType.AIHeroClient);
+                if (Eharass != null)
+                {
+                    if (Program.E.IsReady())
+                        Program.E.Cast(Eharass);
+                }
+            }
         }
         public static void JungleMode()
         {
@@ -200,17 +167,6 @@ namespace ExecutionerUrgot
                 {
                     if (Program.Q.IsReady())
                         Program.Q.Cast(Qcamp);
-                }
-            }
-
-            /* W in jungle mode */
-            if (Program.JungleMenu["Wjungle"].Cast<CheckBox>().CurrentValue)
-            {
-                Obj_AI_Base Wcamp = GetEnemy(Program.W.Range, GameObjectType.obj_AI_Minion);
-                if (Wcamp != null)
-                {
-                    if (Program.W.IsReady())
-                        Program.W.Cast(Wcamp);
                 }
             }
 
@@ -236,26 +192,6 @@ namespace ExecutionerUrgot
                         Program.Q.Cast(Qminion);
                 }
             }
-
-            if (Program.LaneClearMenu["Wlanec"].Cast<CheckBox>().CurrentValue)
-            {
-                Obj_AI_Base Wminion = GetEnemy(Program.W.Range, GameObjectType.obj_AI_Minion);
-                if (Wminion != null)
-                {
-                    if (Program.W.IsReady())
-                        Program.W.Cast(Wminion);
-                }
-            }
-
-            if (Program.LaneClearMenu["Wlanec"].Cast<CheckBox>().CurrentValue)
-            {
-                Obj_AI_Base Eminion = GetEnemy(Program.E.Range, GameObjectType.obj_AI_Minion);
-                if (Eminion != null)
-                {
-                    if (Program.E.IsReady())
-                        Program.E.Cast(Eminion);
-                }
-            }
         }
         public static void LastHitMode()
         {
@@ -268,16 +204,6 @@ namespace ExecutionerUrgot
                         Program.Q.Cast(Qminion);
                 }
             }
-
-            if (Program.LastHitMenu["Wlasthit"].Cast<CheckBox>().CurrentValue)
-            {
-                Obj_AI_Base Wminion = GetEnemyKS(AttackSpell.W, GameObjectType.obj_AI_Minion);
-                if (Wminion != null)
-                {
-                    if (Program.W.IsReady())
-                        Program.W.Cast(Wminion);
-                }
-            }
         }
         public static void KSMode()
         {
@@ -288,20 +214,6 @@ namespace ExecutionerUrgot
                 {
                     if (Program.Q.IsReady())
                         Program.Q.Cast(Qks);
-                }
-
-                Obj_AI_Base Wks = GetEnemyKS(AttackSpell.W, GameObjectType.AIHeroClient);
-                if (Wks != null)
-                {
-                    if (Program.W.IsReady())
-                        Program.W.Cast(Wks);
-                }
-
-                Obj_AI_Base Eks = GetEnemyKS(AttackSpell.E, GameObjectType.AIHeroClient);
-                if (Eks != null)
-                {
-                    if (Program.E.IsReady())
-                        Program.E.Cast(Eks);
                 }
             }
         }
@@ -365,6 +277,10 @@ namespace ExecutionerUrgot
                     Program.Q.Cast(Urgot.Position);
                 }
             }
+        }
+        public static void GrabMode()
+        {
+            
         }
         public static void HealthPotionMode()
         {

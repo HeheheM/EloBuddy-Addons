@@ -17,8 +17,10 @@ namespace ExecutionerUrgot
 
     /* To Do:
         
-        * Ignite + Smite input
-        * don't Q Wind Wall/Unbreakable/BlackShield
+        * W shield logic needed
+        * Fix Smite Modes
+        * don't Q/E Wind Wall/BlackShield
+        * don't E Unbreakable
          
     */
     class Program
@@ -90,6 +92,8 @@ namespace ExecutionerUrgot
                 SettingMenu.Add("Smitemode", new CheckBox("Auto Smite"));
                 SettingMenu.Add("KSsmite", new CheckBox("Smite KS"));
             }
+            SettingMenu.AddLabel("Auto R - While under turret, use R to grab enemy.");
+            SettingMenu.Add("Grabmode", new CheckBox("Auto R Mode"));
             SettingMenu.AddSeparator();
             SettingMenu.AddLabel("Health Potion/Mana Potion/Crystalline Flask Activator - 0 is off");
             SettingMenu.Add("Healthcall", new Slider("Use Health Potion if Health %", 25, 0, 100));
@@ -116,9 +120,9 @@ namespace ExecutionerUrgot
             ComboMenu.AddGroupLabel("Combo Features");
             ComboMenu.AddSeparator();
             ComboMenu.Add("Qcombo", new CheckBox("Q"));
-            ComboMenu.Add("Wcombo", new CheckBox("W"));
+            /* ComboMenu.Add("Wcombo", new CheckBox("W")); */
             ComboMenu.Add("Ecombo", new CheckBox("E"));
-            ComboMenu.Add("Rcombo", new CheckBox("Use R with rooting"));
+            ComboMenu.Add("Rcombo", new CheckBox("R"));
 
             HarassMenu = ExecutionerUrgotMenu.AddSubMenu("Harass Features", "HarassFeatures");
             HarassMenu.AddGroupLabel("Harass Features");
@@ -210,6 +214,10 @@ namespace ExecutionerUrgot
             {
                 ExecutionerHandler.StackMode();
             }
+            if (Program.SettingMenu["Grabmode"].Cast<CheckBox>().CurrentValue)
+            {
+                ExecutionerHandler.GrabMode();
+            }
             if (Program.SettingMenu["Healthcall"].Cast<Slider>().CurrentValue > 0)
             {
                 ExecutionerHandler.HealthPotionMode();
@@ -235,16 +243,6 @@ namespace ExecutionerUrgot
                 {
                     ExecutionerHandler.SmiteMode();
                 }
-            }
-
-            /* Menu Information */
-            if (ComboMenu["Rcombo"].Cast<CheckBox>().CurrentValue == false)
-            {
-                ComboMenu["Rcombo"].Cast<CheckBox>().DisplayName = "Use R without rooting";
-            }
-            if (ComboMenu["Rcombo"].Cast<CheckBox>().CurrentValue == true)
-            {
-                ComboMenu["Rcombo"].Cast<CheckBox>().DisplayName = "Use R with rooting";
             }
         }
 
