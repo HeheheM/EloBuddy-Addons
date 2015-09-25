@@ -24,7 +24,7 @@ namespace ExecutionerUrgot
     class Program
     {
         /* Menus */
-        public static Menu ExecutionerUrgotMenu, SettingMenu, ComboMenu, HarassMenu, JungleMenu, LaneClearMenu, LastHitMenu;
+        public static Menu ExecutionerUrgotMenu, SettingMenu, DrawingMenu, ComboMenu, HarassMenu, JungleMenu, LaneClearMenu, LastHitMenu;
         // Skills
         public static Spell.Skillshot Q;
         public static Spell.Active Q2;
@@ -32,6 +32,8 @@ namespace ExecutionerUrgot
         public static Spell.Skillshot E;
         public static Spell.Targeted R;
         public static Spell.Targeted Ignite;
+        public static Spell.Targeted Smite;
+        private static string[] Smites = new[] { "summonersmite", "itemsmiteaoe", "s5_summonersmiteplayerganker", "s5_summonersmitequick", "s5_summonersmiteduel" };
 
         static void Main(string[] args)
         {
@@ -53,13 +55,21 @@ namespace ExecutionerUrgot
             W = new Spell.Active(SpellSlot.W);
             E = new Spell.Skillshot(SpellSlot.E, 900, SkillShotType.Circular);
             R = new Spell.Targeted(SpellSlot.R, 550);
-            if (Player.GetSpell(SpellSlot.Summoner1).Name == "Summonerdot")
+            if (Player.GetSpell(SpellSlot.Summoner1).Name == "summonerdot")
             {
                 Ignite = new Spell.Targeted(SpellSlot.Summoner1, 600);
             }
-            if (Player.GetSpell(SpellSlot.Summoner2).Name == "Summonerdot")
+            if (Player.GetSpell(SpellSlot.Summoner2).Name == "summonerdot")
             {
                 Ignite = new Spell.Targeted(SpellSlot.Summoner2, 600);
+            }
+            if (Smites.Contains(ObjectManager.Player.Spellbook.GetSpell(SpellSlot.Summoner1).Name))
+            {
+                Smite = new Spell.Targeted(SpellSlot.Summoner1, 500);
+            }
+            if (Smites.Contains(ObjectManager.Player.Spellbook.GetSpell(SpellSlot.Summoner2).Name))
+            {
+                Smite = new Spell.Targeted(SpellSlot.Summoner2, 500);
             }
 
             ExecutionerUrgotMenu = MainMenu.AddMenu("Executioner Urgot", "ExecutionerUrgot");
@@ -71,13 +81,36 @@ namespace ExecutionerUrgot
             SettingMenu.Add("Drawmode", new CheckBox("Drawing Mode"));
             SettingMenu.Add("KSmode", new CheckBox("KS Mode"));
             SettingMenu.Add("Stackmode", new CheckBox("Stack Tear Mode"));
-            SettingMenu.Add("Ignitemode", new CheckBox("Auto Ignite"));
+            if (Ignite != null)
+            {
+                SettingMenu.Add("Ignitemode", new CheckBox("Auto Ignite"));
+            }
+            if (Smite != null)
+            {
+                SettingMenu.Add("Smitemode", new CheckBox("Auto Smite"));
+                SettingMenu.Add("KSsmite", new CheckBox("Smite KS"));
+            }
             SettingMenu.AddSeparator();
             SettingMenu.AddLabel("Health Potion/Mana Potion/Crystalline Flask Activator - 0 is off");
             SettingMenu.Add("Healthcall", new Slider("Use Health Potion if Health %", 25, 0, 100));
             SettingMenu.Add("Manacall", new Slider("Use Mana Potion if Mana %", 25, 0, 100));
             SettingMenu.Add("FlaskHcall", new Slider("Use Crystalline Flask if Health %", 25, 0, 100));
             SettingMenu.Add("FlaskMcall", new Slider("Use Crystalline Flask if Mana %", 25, 0, 100));
+
+            DrawingMenu = ExecutionerUrgotMenu.AddSubMenu("Drawing Features", "DrawingFeatures");
+            DrawingMenu.AddGroupLabel("Drawing Features");
+            DrawingMenu.AddSeparator();
+            DrawingMenu.Add("Qdraw", new CheckBox("Q"));
+            DrawingMenu.Add("Edraw", new CheckBox("E"));
+            DrawingMenu.Add("Rdraw", new CheckBox("R"));
+            if (Ignite != null)
+            {
+                DrawingMenu.Add("Idraw", new CheckBox("Ignite"));
+            }
+            if (Smite != null)
+            {
+                DrawingMenu.Add("Sdraw", new CheckBox("Smite"));
+            }
 
             ComboMenu = ExecutionerUrgotMenu.AddSubMenu("Combo Features", "ComboFeatures");
             ComboMenu.AddGroupLabel("Combo Features");
@@ -97,6 +130,25 @@ namespace ExecutionerUrgot
             JungleMenu.AddSeparator();
             JungleMenu.Add("Qjungle", new CheckBox("Q"));
             JungleMenu.Add("Ejungle", new CheckBox("E"));
+            if (Smite != null)
+            {
+                JungleMenu.AddGroupLabel("Smite Features");
+                JungleMenu.AddLabel("Summoner's Rift Camps");
+                JungleMenu.Add("Bluesmite", new CheckBox("Blue Sentinel"));
+                JungleMenu.Add("Redsmite", new CheckBox("Red Brambleback"));
+                JungleMenu.Add("Krugsmite", new CheckBox("Ancient Krug"));
+                JungleMenu.Add("Grompsmite", new CheckBox("Gromp"));
+                JungleMenu.Add("Murksmite", new CheckBox("Greater Murk Wolf"));
+                JungleMenu.Add("Birdsmite", new CheckBox("Crimson Raptor"));
+                JungleMenu.Add("Crabsmite", new CheckBox("Rift Scuttler"));
+                JungleMenu.Add("Dragonsmite", new CheckBox("Dragon"));
+                JungleMenu.Add("Baronsmite", new CheckBox("Baron Nashor"));
+                JungleMenu.AddLabel("Twisted Treeline Camps");
+                JungleMenu.Add("Golemsmite", new CheckBox("Big Golem"));
+                JungleMenu.Add("Wolfsmite", new CheckBox("Giant Wolf"));
+                JungleMenu.Add("Wraithsmite", new CheckBox("Wraith"));
+                JungleMenu.Add("Spidersmite", new CheckBox("Vilemaw"));
+            }
 
             LaneClearMenu = ExecutionerUrgotMenu.AddSubMenu("Lane Clear Features", "LaneClearFeatures");
             LaneClearMenu.AddGroupLabel("Lane Clear Features");
@@ -110,6 +162,10 @@ namespace ExecutionerUrgot
 
             Game.OnTick += Game_OnTick;
             Drawing.OnDraw += Drawing_OnDraw;
+            if (ExecutionerHandler.Urgot.Level == 1)
+            {
+                ExecutionerHandler.Urgot.Spellbook.LevelSpell(SpellSlot.Q);
+            }
             Player.OnLevelUp += ExecutionerHandler.LevelerMode;
             /*Gapcloser.OnGapCloser += Gapcloser_OnGapcloser;
             Interrupter.OnInterruptableSpell += Interrupter_OnInterruptableSpell;*/
@@ -166,9 +222,19 @@ namespace ExecutionerUrgot
             {
                 ExecutionerHandler.CrystallineFlaskMode();
             }
-            if (Program.SettingMenu["Ignitemode"].Cast<CheckBox>().CurrentValue)
+            if (Ignite != null)
             {
-                ExecutionerHandler.IgniteMode();
+                if (Program.SettingMenu["Ignitemode"].Cast<CheckBox>().CurrentValue)
+                {
+                    ExecutionerHandler.IgniteMode();
+                }
+            }
+            if (Smite != null)
+            {
+                if (Program.SettingMenu["Smitemode"].Cast<CheckBox>().CurrentValue)
+                {
+                    ExecutionerHandler.SmiteMode();
+                }
             }
 
             /* Menu Information */

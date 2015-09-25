@@ -22,6 +22,7 @@ namespace ExecutionerUrgot
             W,
             E,
             I,
+            S,
         }
 
         /* Grab Player */
@@ -76,12 +77,30 @@ namespace ExecutionerUrgot
                     .Where(a => a.IsEnemy
                     && a.Type == gametype
                     && !a.IsDead && a.IsValidTarget(Program.Ignite.Range) && !a.IsInvulnerable
-                    && a.Health <= Urgot.GetSummonerSpellDamage(a, DamageLibrary.SummonerSpells.Ignite)
+                    && a.Health <= (Urgot.GetSummonerSpellDamage(a, DamageLibrary.SummonerSpells.Ignite) - (a.HPRegenRate / 10))
                     && a.Distance(Urgot) <= Program.Ignite.Range).FirstOrDefault();
+            }
+            else if (spell == AttackSpell.S)
+            {
+                return ObjectManager.Get<Obj_AI_Base>()
+                    .Where(a => a.IsEnemy
+                    && a.Type == gametype
+                    && !a.IsDead && a.IsValidTarget(Program.Smite.Range) && !a.IsInvulnerable
+                    && Monsters.Any(name => a.Name.StartsWith(name))
+                    && a.Health <= Urgot.GetSummonerSpellDamage(a, DamageLibrary.SummonerSpells.Smite)
+                    && a.Distance(Urgot) <= Program.Smite.Range).FirstOrDefault();
             }
             else
                 return null;
         }
+
+        /* Grab Monsters */
+        public static string[] Monsters =
+        {
+            "SRU_Blue", "SRU_Red", "SRU_Krug", "SRU_Gromp", "SRU_Murkwolf", "SRU_Razorbeak",
+            "SRU_Crab", "SRU_Dragon", "SRU_Baron",
+            "TTNGolem", "TTNWolf", "TTNWraith", "TT_Spiderboss"
+        };
 
         /* Grab Items */
         public static InventorySlot[] UrgotItems { get { return Urgot.InventoryItems; } }
@@ -147,23 +166,10 @@ namespace ExecutionerUrgot
                 }
             }
 
-            /* R in combo mode with root */
             if (Program.ComboMenu["Rcombo"].Cast<CheckBox>().CurrentValue == true)
             {
                 AIHeroClient Rcombo = ObjectManager.Get<AIHeroClient>().Where(a => a.IsEnemy
-                 && a.Distance(Urgot) <= Program.W.Range
-                && a.HasBuff("UrgotW")).FirstOrDefault();
-                if (Rcombo != null)
-                {
-                    if (Program.R.IsReady())
-                        Program.R.Cast();
-                }
-            }
-
-            /* R in combo mode without root */
-            if (Program.ComboMenu["Rcombo"].Cast<CheckBox>().CurrentValue == false)
-            {
-                AIHeroClient Rcombo = ObjectManager.Get<AIHeroClient>().Where(a => a.IsEnemy && a.Distance(Urgot) <= Program.Q.Range).FirstOrDefault();
+                 && a.Distance(Urgot) <= Program.W.Range).FirstOrDefault();
                 if (Rcombo != null)
                 {
                     if (Program.R.IsReady())
@@ -308,14 +314,42 @@ namespace ExecutionerUrgot
                     Program.Ignite.Cast(target);
             }
         }
+        public static void SmiteMode()
+        {
+            Obj_AI_Base target = GetEnemyKS(AttackSpell.S, GameObjectType.obj_AI_Base);
+            if (target != null)
+            {
+                if (Program.Smite.IsReady())
+                {
+                    Program.Smite.Cast(target);
+                }
+            }
+        }
 
         /* Misc Modes */
         public static void DrawMode()
         {
-            Drawing.DrawCircle(Urgot.Position, Program.Q.Range, Color.LawnGreen);
-            Drawing.DrawCircle(Urgot.Position, 1200, Color.OrangeRed);
-            Drawing.DrawCircle(Urgot.Position, Program.E.Range, Color.SpringGreen);
-            Drawing.DrawCircle(Urgot.Position, Program.R.Range, Color.DarkGreen);
+            if (Program.DrawingMenu["Qdraw"].Cast<CheckBox>().CurrentValue)
+            {
+                Drawing.DrawCircle(Urgot.Position, Program.Q.Range, Color.LawnGreen);
+                Drawing.DrawCircle(Urgot.Position, 1200, Color.OrangeRed);
+            }
+            if (Program.DrawingMenu["Edraw"].Cast<CheckBox>().CurrentValue)
+            {
+                Drawing.DrawCircle(Urgot.Position, Program.E.Range, Color.SpringGreen);
+            }
+            if (Program.DrawingMenu["Rdraw"].Cast<CheckBox>().CurrentValue)
+            {
+                Drawing.DrawCircle(Urgot.Position, Program.R.Range, Color.DarkGreen);
+            }
+            if (Program.Ignite != null && Program.DrawingMenu["Idraw"].Cast<CheckBox>().CurrentValue)
+            {
+                Drawing.DrawCircle(Urgot.Position, Program.Ignite.Range, Color.MediumVioletRed);
+            }
+            if (Program.Smite != null && Program.DrawingMenu["Sdraw"].Cast<CheckBox>().CurrentValue)
+            {
+                Drawing.DrawCircle(Urgot.Position, Program.Smite.Range, Color.LightGoldenrodYellow);
+            }
         }
         public static void StackMode()
         {
@@ -391,8 +425,8 @@ namespace ExecutionerUrgot
                 return;
             }
 
-            int[] array = new int[] { 0, 1, 3, 1, 2, 1, 4, 1, 2, 1, 2, 4, 2, 2, 3, 3, 4, 3, 3 };
-            int skill = array[args.Level];
+            int[] array = new int[] { 1, 3, 1, 2, 1, 4, 1, 2, 1, 2, 4, 2, 2, 3, 3, 4, 3, 3 };
+            int skill = array[Urgot.Level];
 
             if (skill == 1)
                 Urgot.Spellbook.LevelSpell(SpellSlot.Q);
