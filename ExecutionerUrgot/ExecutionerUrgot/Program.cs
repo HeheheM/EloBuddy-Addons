@@ -123,6 +123,9 @@ namespace ExecutionerUrgot
             /* ComboMenu.Add("Wcombo", new CheckBox("W")); */
             ComboMenu.Add("Ecombo", new CheckBox("E"));
             ComboMenu.Add("Rcombo", new CheckBox("R"));
+            ComboMenu.AddSeparator();
+            ComboMenu.AddLabel("Muramana Activation - 0 is Off");
+            ComboMenu.Add("Muracall", new Slider("Muramana - Current Mana Limiter", 50, 0, 100));
 
             HarassMenu = ExecutionerUrgotMenu.AddSubMenu("Harass Features", "HarassFeatures");
             HarassMenu.AddGroupLabel("Harass Features");

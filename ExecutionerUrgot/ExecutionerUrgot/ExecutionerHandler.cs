@@ -141,6 +141,11 @@ namespace ExecutionerUrgot
                         Program.R.Cast(Rcombo);
                 }
             }
+
+            if (Program.ComboMenu["Muramode"].Cast<Slider>().CurrentValue > 0)
+            {
+                MuraMode();
+            }
         }
         public static void HarassMode()
         {
@@ -284,6 +289,18 @@ namespace ExecutionerUrgot
                     && Program.Q.IsReady())
                 {
                     Program.Q.Cast(Urgot.Position);
+                }
+            }
+        }
+        public static void MuraMode()
+        {
+            foreach (InventorySlot item in UrgotItems)
+            {
+                if (((int)item.Id == 3042 || (int)item.Id == 3043)
+                    && Urgot.Mana >= (Urgot.MaxMana * (0.01 * Program.ComboMenu["Muracall"].Cast<Slider>().CurrentValue))
+                    && item.CanUseItem())
+                {
+                    item.Cast();
                 }
             }
         }
