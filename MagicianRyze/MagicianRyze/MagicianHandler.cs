@@ -78,7 +78,7 @@ namespace MagicianRyze
                     .Where(a => a.IsEnemy
                     && a.Type == gametype
                     && !a.IsDead && a.IsValidTarget(Program.Ignite.Range) && !a.IsInvulnerable
-                    && a.Health <= (Ryze.GetSummonerSpellDamage(a, DamageLibrary.SummonerSpells.Ignite) - (a.HPRegenRate / 10))
+                    && a.Health <= (Ryze.GetSummonerSpellDamage(a, DamageLibrary.SummonerSpells.Ignite) - (a.HPRegenRate * 0.1))
                     && a.Distance(Ryze) <= Program.Ignite.Range).FirstOrDefault();
             }
             else if (spell == AttackSpell.S)
