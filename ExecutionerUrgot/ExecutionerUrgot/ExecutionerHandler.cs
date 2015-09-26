@@ -72,6 +72,15 @@ namespace ExecutionerUrgot
                 return null;
         }
 
+        /* Grab Turret */
+        public static Obj_AI_Turret GetTurret(float range, GameObjectType gametype)
+        {
+            return ObjectManager.Get<Obj_AI_Turret>().Where(a => a.IsAlly
+            && a.Type == gametype
+            && !a.IsDead && !a.IsInvulnerable
+            && a.Distance(Urgot) <= range).FirstOrDefault();
+        }
+
         /* Grab Monsters */
         public static string[] Monsters =
         {
@@ -129,7 +138,7 @@ namespace ExecutionerUrgot
                 if (Rcombo != null)
                 {
                     if (Program.R.IsReady())
-                        Program.R.Cast();
+                        Program.R.Cast(Rcombo);
                 }
             }
         }
@@ -280,7 +289,19 @@ namespace ExecutionerUrgot
         }
         public static void GrabMode()
         {
-            
+            if (Urgot.CountEnemiesInRange(Program.Q.Range) <= 2)
+            {
+                Obj_AI_Turret turret = GetTurret(600, GameObjectType.obj_AI_Turret);
+                Obj_AI_Base target = GetEnemy(Program.R.Range, GameObjectType.AIHeroClient);
+                if (turret.Health >= (turret.MaxHealth * 0.25))
+                {
+                    if (target != null)
+                    {
+                        if (Program.R.IsReady())
+                            Program.R.Cast(target);
+                    }
+                }
+            }
         }
         public static void HealthPotionMode()
         {
