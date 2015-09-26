@@ -55,7 +55,7 @@ namespace ExecutionerUrgot
                     .Where(a => a.IsEnemy
                     && a.Type == gametype
                     && !a.IsDead && a.IsValidTarget(Program.Ignite.Range) && !a.IsInvulnerable
-                    && a.Health <= (Urgot.GetSummonerSpellDamage(a, DamageLibrary.SummonerSpells.Ignite) - (a.HPRegenRate / 10))
+                    && a.Health <= (Urgot.GetSummonerSpellDamage(a, DamageLibrary.SummonerSpells.Ignite) - (a.HPRegenRate * 0.1))
                     && a.Distance(Urgot) <= Program.Ignite.Range).FirstOrDefault();
             }
             else if (spell == AttackSpell.S)
@@ -132,7 +132,7 @@ namespace ExecutionerUrgot
             }
 
             /* R in combo mode */
-            if (Program.ComboMenu["Rcombo"].Cast<CheckBox>().CurrentValue == true)
+            if (Program.ComboMenu["Rcombo"].Cast<CheckBox>().CurrentValue)
             {
                 Obj_AI_Base Rcombo = GetEnemy(Program.R.Range, GameObjectType.AIHeroClient);
                 if (Rcombo != null)
