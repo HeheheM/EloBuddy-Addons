@@ -253,6 +253,13 @@ namespace ExecutionerUrgot
         }
 
         /* Misc Modes */
+        public static bool IsInShopRange()
+        {
+            if (ObjectManager.Get<Obj_SpawnPoint>().Where(a => a.IsAlly && a.Distance(Urgot) <= 1000).FirstOrDefault() != null)
+                return true;
+            else
+                return false;
+        }
         public static void DrawMode()
         {
             if (Program.DrawingMenu["Qdraw"].Cast<CheckBox>().CurrentValue)
@@ -285,7 +292,7 @@ namespace ExecutionerUrgot
                         || item.Id == ItemId.Archangels_Staff || item.Id == ItemId.Archangels_Staff_Crystal_Scar
                         || item.Id == ItemId.Manamune || item.Id == ItemId.Manamune_Crystal_Scar)
                     && item.Stacks < 750
-                    && Urgot.IsInShopRange()
+                    && IsInShopRange()
                     && Program.Q.IsReady())
                 {
                     Program.Q.Cast(Urgot.Position);
@@ -327,7 +334,7 @@ namespace ExecutionerUrgot
                 if (item.Id == ItemId.Health_Potion
                     && Urgot.Health <= (Urgot.MaxHealth * (0.01 * Program.SettingMenu["Healthcall"].Cast<Slider>().CurrentValue))
                     && !Urgot.IsRecalling()
-                    && !Urgot.IsInShopRange()
+                    && !IsInShopRange()
                     && !Urgot.HasBuff("RegenerationPotion"))
                 {
                     item.Cast();
@@ -341,7 +348,7 @@ namespace ExecutionerUrgot
                 if (item.Id == ItemId.Mana_Potion
                     && Urgot.Mana <= (Urgot.MaxMana * (0.01 * Program.SettingMenu["FlaskHcall"].Cast<Slider>().CurrentValue))
                     && !Urgot.IsRecalling()
-                    && !Urgot.IsInShopRange()
+                    && !IsInShopRange()
                     && !Urgot.HasBuff("FlaskOfCrystalWater"))
                 {
                     item.Cast();
@@ -356,7 +363,7 @@ namespace ExecutionerUrgot
                 if (item.Id == ItemId.Crystalline_Flask
                     && Urgot.Health <= (Urgot.MaxHealth * (0.01 * Program.SettingMenu["FlaskHcall"].Cast<Slider>().CurrentValue))
                     && !Urgot.IsRecalling()
-                    && !Urgot.IsInShopRange()
+                    && !IsInShopRange()
                     && !Urgot.HasBuff("ItemCrystalFlask"))
                 {
                     item.Cast();
@@ -365,7 +372,7 @@ namespace ExecutionerUrgot
                 if (item.Id == ItemId.Crystalline_Flask
                     && Urgot.Mana <= (Urgot.MaxMana * (0.01 * Program.SettingMenu["FlaskMcall"].Cast<Slider>().CurrentValue))
                     && !Urgot.IsRecalling()
-                    && !Urgot.IsInShopRange()
+                    && !IsInShopRange()
                     && !Urgot.HasBuff("ItemCrystalFlask"))
                 {
                     item.Cast();
