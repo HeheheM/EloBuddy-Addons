@@ -347,6 +347,13 @@ namespace MagicianRyze
         }
 
         /* Misc Modes */
+        public static bool IsInShopRange()
+        {
+            if (ObjectManager.Get<Obj_SpawnPoint>().Where(a => a.IsAlly && a.Distance(Ryze) <= 1000).FirstOrDefault() != null)
+                return true;
+            else
+                return false;
+        }
         public static void DrawMode()
         {
             if (Program.DrawingMenu["Qdraw"].Cast<CheckBox>().CurrentValue)
@@ -373,8 +380,8 @@ namespace MagicianRyze
                 if ((item.Id == ItemId.Tear_of_the_Goddess || item.Id == ItemId.Tear_of_the_Goddess_Crystal_Scar
                         || item.Id == ItemId.Archangels_Staff || item.Id == ItemId.Archangels_Staff_Crystal_Scar
                         || item.Id == ItemId.Manamune || item.Id == ItemId.Manamune_Crystal_Scar)
-                    && item.Stacks < 750
-                    && Ryze.IsInShopRange()
+                    // && item.Stacks < 750
+                    && IsInShopRange()
                     && Program.Q.IsReady())
                 {
                     Program.Q.Cast(Ryze.Position);
@@ -400,7 +407,7 @@ namespace MagicianRyze
                 if (item.Id == ItemId.Health_Potion
                     && Ryze.Health <= (Ryze.MaxHealth * (0.01 * Program.SettingMenu["Healthcall"].Cast<Slider>().CurrentValue))
                     && !Ryze.IsRecalling()
-                    && !Ryze.IsInShopRange()
+                    && !IsInShopRange()
                     && !Ryze.HasBuff("RegenerationPotion"))
                 {
                     item.Cast();
@@ -414,7 +421,7 @@ namespace MagicianRyze
                 if (item.Id == ItemId.Mana_Potion
                     && Ryze.Mana <= (Ryze.MaxMana * (0.01 * Program.SettingMenu["FlaskHcall"].Cast<Slider>().CurrentValue))
                     && !Ryze.IsRecalling()
-                    && !Ryze.IsInShopRange()
+                    && !IsInShopRange()
                     && !Ryze.HasBuff("FlaskOfCrystalWater"))
                 {
                     item.Cast();
@@ -429,7 +436,7 @@ namespace MagicianRyze
                 if (item.Id == ItemId.Crystalline_Flask
                     && Ryze.Health <= (Ryze.MaxHealth * (0.01 * Program.SettingMenu["FlaskHcall"].Cast<Slider>().CurrentValue))
                     && !Ryze.IsRecalling()
-                    && !Ryze.IsInShopRange()
+                    && !IsInShopRange()
                     && !Ryze.HasBuff("ItemCrystalFlask"))
                 {
                     item.Cast();
@@ -438,7 +445,7 @@ namespace MagicianRyze
                 if (item.Id == ItemId.Crystalline_Flask
                     && Ryze.Mana <= (Ryze.MaxMana * (0.01 * Program.SettingMenu["FlaskMcall"].Cast<Slider>().CurrentValue))
                     && !Ryze.IsRecalling()
-                    && !Ryze.IsInShopRange()
+                    && !IsInShopRange()
                     && !Ryze.HasBuff("ItemCrystalFlask"))
                 {
                     item.Cast();
