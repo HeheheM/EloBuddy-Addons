@@ -16,6 +16,7 @@ namespace BallistaKogMaw
     class BallistaHandler
     {
         public static Obj_AI_Base Ptarget;
+        /* Clockbased Events */
         public static int lastSecondUsedTear = -1;
         public static int GetSecondsSinceUses(int varlastsecused)
         {
