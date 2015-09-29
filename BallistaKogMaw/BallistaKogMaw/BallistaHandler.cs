@@ -185,7 +185,7 @@ namespace BallistaKogMaw
                 }
             }
 
-            /* W in combo mode */
+            /* W in combo mode 
             if (Program.ComboMenu["Wcombo"].Cast<CheckBox>().CurrentValue)
             {
                 Obj_AI_Base Wcombo = GetEnemy(GetWRange(), GameObjectType.AIHeroClient);
@@ -194,7 +194,7 @@ namespace BallistaKogMaw
                     if (Program.W.IsReady())
                         Program.W.Cast();
                 }
-            }
+            }*/
             
             /* E in combo mode */
             if (Program.ComboMenu["Ecombo"].Cast<CheckBox>().CurrentValue)
@@ -243,7 +243,7 @@ namespace BallistaKogMaw
                         Program.Q.Cast(Qcamp);
                 }
             }
-            /* W in jungle mode */
+            /* W in jungle mode 
             if (Program.JungleMenu["Wjungle"].Cast<CheckBox>().CurrentValue)
             {
                 Obj_AI_Base Wcamp = GetEnemy(GetWRange(), GameObjectType.obj_AI_Minion);
@@ -252,7 +252,7 @@ namespace BallistaKogMaw
                     if (Program.W.IsReady())
                         Program.W.Cast();
                 }
-            }
+            }*/
             /* R in jungle mode */
             if (Program.JungleMenu["Rjungle"].Cast<CheckBox>().CurrentValue && CountStacks() < 2)
             {
@@ -275,7 +275,7 @@ namespace BallistaKogMaw
                         Program.Q.Cast(Qminion);
                 }
             }
-            if (Program.JungleMenu["Wlanec"].Cast<CheckBox>().CurrentValue)
+            /*if (Program.JungleMenu["Wlanec"].Cast<CheckBox>().CurrentValue)
             {
                 Obj_AI_Base Wminion = GetEnemy(GetWRange(), GameObjectType.obj_AI_Minion);
                 if (Wminion != null)
@@ -283,7 +283,7 @@ namespace BallistaKogMaw
                     if (Program.W.IsReady())
                         Program.W.Cast();
                 }
-            }
+            }*/
         }
         public static void LastHitMode()
         {
@@ -296,7 +296,7 @@ namespace BallistaKogMaw
                         Program.Q.Cast(Qminion);
                 }
             }
-            if (Program.LastHitMenu["Wlasthit"].Cast<CheckBox>().CurrentValue)
+            /*if (Program.LastHitMenu["Wlasthit"].Cast<CheckBox>().CurrentValue)
             {
                 Obj_AI_Base Wminion = GetEnemyWKS(GameObjectType.obj_AI_Minion);
                 if (Wminion != null)
@@ -307,7 +307,7 @@ namespace BallistaKogMaw
                         Orbwalker.ForcedTarget = Wminion;
                     }
                 }
-            }
+            }*/
         }
         public static void KSMode()
         {
@@ -393,10 +393,10 @@ namespace BallistaKogMaw
             {
                 Drawing.DrawCircle(KogMaw.Position, Program.Q.Range, Color.SeaGreen);
             }
-            if (Program.DrawingMenu["Wdraw"].Cast<CheckBox>().CurrentValue)
+            /*if (Program.DrawingMenu["Wdraw"].Cast<CheckBox>().CurrentValue)
             {
                 Drawing.DrawCircle(KogMaw.Position, GetWRange(), Color.SeaGreen);
-            }
+            }*/
             if (Program.DrawingMenu["Edraw"].Cast<CheckBox>().CurrentValue)
             {
                 Drawing.DrawCircle(KogMaw.Position, Program.E.Range, Color.SeaGreen);
