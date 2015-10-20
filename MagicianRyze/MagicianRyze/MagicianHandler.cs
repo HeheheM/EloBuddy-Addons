@@ -34,7 +34,7 @@ namespace MagicianRyze
         {
             return ObjectManager.Get<Obj_AI_Base>().OrderBy(a => a.Health)
                     .Where(a => a.IsEnemy
-                    && a.Type == gametype && Ryze.IsRecalling
+                    && a.Type == gametype && !Ryze.IsRecalling()
                     && !a.IsDead && a.IsValidTarget(range) && !a.IsInvulnerable
                     && a.Distance(Ryze) <= range).FirstOrDefault();
         }
